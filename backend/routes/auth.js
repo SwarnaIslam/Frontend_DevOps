@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 const User = require("../models/users");
 const salt = Number(process.env.HASH_SALT);
-console.log("Salt from environment:", salt);
 router.post("/register", async (req, res) => {
   try {
     const hashedPass = await bcrypt.hash(req.body.password, salt);
