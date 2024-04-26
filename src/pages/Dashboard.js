@@ -49,12 +49,16 @@ const Dashboard = () => {
     formData.append("price", tempCar.price);
     formData.append("model", tempCar.model);
     formData.append("type", tempCar.type);
-    const req = await axios.post("https://api.projectsbd.me/api/cars", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        "x-access-token": localStorage.getItem("token"),
-      },
-    });
+    const req = await axios.post(
+      "https://api.projectsbd.me/api/cars",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "x-access-token": localStorage.getItem("token"),
+        },
+      }
+    );
     console.log(req);
     const data = req.data;
     if (data.status === "ok") {

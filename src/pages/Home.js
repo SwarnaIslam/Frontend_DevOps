@@ -34,7 +34,10 @@ const Home = () => {
           {cars.slice(i, i + 4).map((car, index) => (
             <div className="col" key={index}>
               <div className="car-template">
-                <img src={car.photo} alt={car.model} />
+                <img
+                  src={"https://d3100fec1li5ro.cloudfront.net/" + car.photo}
+                  alt={car.model}
+                />
                 <p>Model: {car.model}</p>
                 <p>Type: {car.type}</p>
                 <p>Price: {car.price}</p>
