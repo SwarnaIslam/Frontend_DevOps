@@ -1,18 +1,31 @@
-import React from "react";
-import { json } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Home = () => {
-  const renderCarRows = async () => {
-    const req = await fetch("http://localhost:9000/api/cars", {
-      headers: {
-        "x-access-token": localStorage.getItem("token"),
-      },
-    });
-    const data = await req.json();
-    if (data.status !== "ok") {
-      alert(data.error);
-    }
-    const cars = data.cars;
+  const [cars, setCars] = useState([]);
+
+  useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        const req = await fetch("http://localhost:9000/api/cars", {
+          headers: {
+            "x-access-token": localStorage.getItem("token"),
+          },
+        });
+        const data = await req.json();
+        if (data.status !== "ok") {
+          throw new Error(data.error);
+        }
+        setCars(data.cars);
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
+    fetchCars();
+  }, []);
+
+  const renderCarRows = () => {
     const carRows = [];
     for (let i = 0; i < cars.length; i += 4) {
       const row = (
@@ -33,6 +46,7 @@ const Home = () => {
     }
     return carRows;
   };
+
   return <div>{renderCarRows()}</div>;
 };
 
