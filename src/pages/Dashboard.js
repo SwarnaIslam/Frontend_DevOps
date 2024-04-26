@@ -15,7 +15,7 @@ const Dashboard = () => {
   });
 
   async function populateCars() {
-    const req = await fetch("http://localhost:9000/api/cars/your-cars", {
+    const req = await fetch("https://api.projectsbd.me/api/cars/your-cars", {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
@@ -49,7 +49,7 @@ const Dashboard = () => {
     formData.append("price", tempCar.price);
     formData.append("model", tempCar.model);
     formData.append("type", tempCar.type);
-    const req = await axios.post("http://localhost:9000/api/cars", formData, {
+    const req = await axios.post("https://api.projectsbd.me/api/cars", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
         "x-access-token": localStorage.getItem("token"),
@@ -73,7 +73,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.delete(
-        `http://localhost:9000/api/cars/${carId}`,
+        `https://api.projectsbd.me/api/cars/${carId}`,
         {
           headers: {
             "x-access-token": token,

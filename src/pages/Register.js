@@ -8,18 +8,21 @@ const Register = () => {
   const [password, setPassword] = useState("");
   async function registerUser(event) {
     event.preventDefault();
-    const response = await fetch("http://localhost:9000/api/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        phone,
-        password,
-      }),
-    });
+    const response = await fetch(
+      "https://api.projectsbd.me/api/auth/register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          password,
+        }),
+      }
+    );
     const data = await response.json();
     if (data.status === "ok") {
       navigation("/login");

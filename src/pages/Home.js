@@ -7,7 +7,7 @@ const Home = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const req = await fetch("http://localhost:9000/api/cars", {
+        const req = await fetch("https://api.projectsbd.me/api/cars", {
           headers: {
             "x-access-token": localStorage.getItem("token"),
           },
