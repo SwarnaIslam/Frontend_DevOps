@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [cars, setCars] = useState([]);
+  const [file, setFile] = useState();
   const [tempCar, setTempCar] = useState({
     price: 0, // Defaulting to 0
     photo: "",
@@ -13,12 +15,13 @@ const Dashboard = () => {
   });
 
   async function populateCars() {
-    const req = await fetch("http://localhost:9000/api/cars", {
+    const req = await fetch("http://localhost:9000/api/cars/your-cars", {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
     });
     const data = await req.json();
+    console.log(data);
     if (data.status === "ok") {
       setCars(data.cars);
     } else {
@@ -41,15 +44,19 @@ const Dashboard = () => {
 
   async function addCar(event) {
     event.preventDefault();
-    const req = await fetch("http://localhost:9000/api/cars", {
-      method: "POST",
+    const formData = new FormData();
+    formData.append("photo", file);
+    formData.append("price", tempCar.price);
+    formData.append("model", tempCar.model);
+    formData.append("type", tempCar.type);
+    const req = await axios.post("http://localhost:9000/api/cars", formData, {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
         "x-access-token": localStorage.getItem("token"),
       },
-      body: JSON.stringify(tempCar),
     });
-    const data = await req.json();
+    console.log(req);
+    const data = req.data;
     if (data.status === "ok") {
       setTempCar({
         price: 0, // Resetting price to 0
@@ -62,6 +69,30 @@ const Dashboard = () => {
     }
   }
 
+  async function deleteCar(carId) {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.delete(
+        `http://localhost:9000/api/cars/${carId}`,
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
+      console.log(res);
+      if (res.data.status === "ok") {
+        // Remove the deleted car from the state
+        setCars(cars.filter((car) => car._id !== carId));
+      } else {
+        alert(res.data.error);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while deleting the car.");
+    }
+  }
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     // If the field is price, convert value to number
@@ -71,9 +102,14 @@ const Dashboard = () => {
       [name]: newValue,
     }));
   };
+  const fileChange = (event) => {
+    const file = event.target.files[0];
+    setFile(file);
+  };
 
   return (
     <div>
+      <Link to="/home">Home</Link>
       <h1>Sell Car: Submit information</h1>
       <form onSubmit={addCar}>
         <input
@@ -83,13 +119,9 @@ const Dashboard = () => {
           placeholder="Price"
           onChange={handleChange}
         />
-        <input
-          type="text"
-          name="photo"
-          value={tempCar.photo}
-          placeholder="Photo URL"
-          onChange={handleChange}
-        />
+        <br />
+        <input type="file" accept="image/*" onChange={fileChange} />
+        <br />
         <input
           type="text"
           name="model"
@@ -97,6 +129,7 @@ const Dashboard = () => {
           placeholder="Model"
           onChange={handleChange}
         />
+        <br />
         <input
           type="text"
           name="type"
@@ -104,9 +137,20 @@ const Dashboard = () => {
           placeholder="Type"
           onChange={handleChange}
         />
+        <br />
         <button type="submit">Submit</button>
       </form>
-      <Link to="/home">Home</Link>
+      <div>
+        {cars.map((car) => (
+          <div key={car._id}>
+            <h2>Car Info</h2>
+            <p>Price: {car.price}</p>
+            <p>Model: {car.model}</p>
+            <p>Type: {car.type}</p>
+            <button onClick={() => deleteCar(car._id)}>Delete</button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
