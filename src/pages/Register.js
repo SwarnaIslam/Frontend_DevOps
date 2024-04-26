@@ -4,6 +4,7 @@ const Register = () => {
   const navigation = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   async function registerUser(event) {
     event.preventDefault();
@@ -15,6 +16,7 @@ const Register = () => {
       body: JSON.stringify({
         name,
         email,
+        phone,
         password,
       }),
     });
@@ -39,6 +41,13 @@ const Register = () => {
           onChange={(e) => setEmail(e.target.value)}
           type="email"
           placeholder="Email"
+        />
+        <br />
+        <input
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          type="text"
+          placeholder="Phone number"
         />
         <br />
         <input

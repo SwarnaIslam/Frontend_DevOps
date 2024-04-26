@@ -38,6 +38,7 @@ const Home = () => {
                 <p>Model: {car.model}</p>
                 <p>Type: {car.type}</p>
                 <p>Price: {car.price}</p>
+                <p>Contact:{car.owner.phone}</p>
               </div>
             </div>
           ))}
