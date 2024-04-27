@@ -30,7 +30,7 @@ const Register = () => {
   }
   return (
     <div>
-      <h1>Register</h1>
+      <h1>Sign Up</h1>
       <form onSubmit={registerUser}>
         <input
           value={name}
